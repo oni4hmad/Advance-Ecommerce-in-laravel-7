@@ -45,12 +45,9 @@ class UsersController extends Controller
             'status'=>'required|in:active,inactive',
             'photo'=>'nullable|string',
         ]);
-        // dd($request->all());
         $data=$request->all();
         $data['password']=Hash::make($request->password);
-        // dd($data);
         $status=User::create($data);
-        // dd($status);
         if($status){
             request()->session()->flash('success','Successfully added user');
         }
@@ -65,7 +62,7 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -102,10 +99,8 @@ class UsersController extends Controller
             'status'=>'required|in:active,inactive',
             'photo'=>'nullable|string',
         ]);
-        // dd($request->all());
         $data=$request->all();
-        // dd($data);
-        
+
         $status=$user->fill($data)->save();
         if($status){
             request()->session()->flash('success','Successfully updated');

@@ -24,7 +24,7 @@ class PostCommentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
@@ -39,14 +39,10 @@ class PostCommentController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $post_info=Post::getPostBySlug($request->slug);
-        // return $post_info;
         $data=$request->all();
         $data['user_id']=$request->user()->id;
-        // $data['post_id']=$post_info->id;
         $data['status']='active';
-        // return $data;
         $status=PostComment::create($data);
         $user=User::where('role','admin')->get();
         $details=[
@@ -68,7 +64,7 @@ class PostCommentController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -105,7 +101,6 @@ class PostCommentController extends Controller
         $comment=PostComment::find($id);
         if($comment){
             $data=$request->all();
-            // return $data;
             $status=$comment->fill($data)->update();
             if($status){
                 request()->session()->flash('success','Comment successfully updated');

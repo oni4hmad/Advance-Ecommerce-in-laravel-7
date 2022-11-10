@@ -61,7 +61,7 @@ class PostTagController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -89,8 +89,7 @@ class PostTagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $postTag=PostTag::findOrFail($id);
-         // return $request->all();
+         $postTag=PostTag::findOrFail($id);
          $this->validate($request,[
             'title'=>'string|required',
             'status'=>'required|in:active,inactive'
@@ -115,9 +114,9 @@ class PostTagController extends Controller
     public function destroy($id)
     {
         $postTag=PostTag::findOrFail($id);
-       
+
         $status=$postTag->delete();
-        
+
         if($status){
             request()->session()->flash('success','Post Tag successfully deleted');
         }

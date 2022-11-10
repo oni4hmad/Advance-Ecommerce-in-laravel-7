@@ -7,6 +7,12 @@ use App\Models\Brand;
 use Illuminate\Support\Str;
 class BrandController extends Controller
 {
+
+    /**
+     * @var string
+     */
+    private $errorMsgTryAgain = 'Error, Please try again';
+
     /**
      * Display a listing of the resource.
      *
@@ -46,13 +52,12 @@ class BrandController extends Controller
             $slug=$slug.'-'.date('ymdis').'-'.rand(0,999);
         }
         $data['slug']=$slug;
-        // return $data;
         $status=Brand::create($data);
         if($status){
             request()->session()->flash('success','Brand successfully created');
         }
         else{
-            request()->session()->flash('error','Error, Please try again');
+            request()->session()->flash('error', $this->errorMsgTryAgain);
         }
         return redirect()->route('brand.index');
     }
@@ -61,7 +66,7 @@ class BrandController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -98,13 +103,13 @@ class BrandController extends Controller
             'title'=>'string|required',
         ]);
         $data=$request->all();
-       
+
         $status=$brand->fill($data)->save();
         if($status){
             request()->session()->flash('success','Brand successfully updated');
         }
         else{
-            request()->session()->flash('error','Error, Please try again');
+            request()->session()->flash('error', $this->errorMsgTryAgain);
         }
         return redirect()->route('brand.index');
     }
@@ -124,7 +129,7 @@ class BrandController extends Controller
                 request()->session()->flash('success','Brand successfully deleted');
             }
             else{
-                request()->session()->flash('error','Error, Please try again');
+                request()->session()->flash('error', $this->errorMsgTryAgain);
             }
             return redirect()->route('brand.index');
         }

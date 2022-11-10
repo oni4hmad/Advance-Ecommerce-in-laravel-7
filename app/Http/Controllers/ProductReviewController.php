@@ -18,18 +18,18 @@ class ProductReviewController extends Controller
     public function index()
     {
         $reviews=ProductReview::getAllReview();
-        
+
         return view('backend.review.index')->with('reviews',$reviews);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -44,13 +44,10 @@ class ProductReviewController extends Controller
             'rate'=>'required|numeric|min:1'
         ]);
         $product_info=Product::getProductBySlug($request->slug);
-        //  return $product_info;
-        // return $request->all();
         $data=$request->all();
         $data['product_id']=$product_info->id;
         $data['user_id']=$request->user()->id;
         $data['status']='active';
-        // dd($data);
         $status=ProductReview::create($data);
 
         $user=User::where('role','admin')->get();
@@ -73,7 +70,7 @@ class ProductReviewController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -89,7 +86,6 @@ class ProductReviewController extends Controller
     public function edit($id)
     {
         $review=ProductReview::find($id);
-        // return $review;
         return view('backend.review.edit')->with('review',$review);
     }
 
@@ -104,20 +100,9 @@ class ProductReviewController extends Controller
     {
         $review=ProductReview::find($id);
         if($review){
-            // $product_info=Product::getProductBySlug($request->slug);
-            //  return $product_info;
-            // return $request->all();
             $data=$request->all();
             $status=$review->fill($data)->update();
 
-            // $user=User::where('role','admin')->get();
-            // return $user;
-            // $details=[
-            //     'title'=>'Update Product Rating!',
-            //     'actionURL'=>route('product-detail',$product_info->id),
-            //     'fas'=>'fa-star'
-            // ];
-            // Notification::send($user,new StatusNotification($details));
             if($status){
                 request()->session()->flash('success','Review Successfully updated');
             }

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use http\Cookie;
 use Illuminate\Http\Request;
 use App\Models\Shipping;
 use App\Models\Coupon;
 
 class ShippingController extends Controller
 {
+
+    private $errorMsgTryAgain = 'Error, Please try again';
+
     /**
      * Display a listing of the resource.
      *
@@ -43,13 +47,12 @@ class ShippingController extends Controller
             'status'=>'required|in:active,inactive'
         ]);
         $data=$request->all();
-        // return $data;
         $status=Shipping::create($data);
         if($status){
             request()->session()->flash('success','Shipping successfully created');
         }
         else{
-            request()->session()->flash('error','Error, Please try again');
+            request()->session()->flash('error',$this->errorMsgTryAgain);
         }
         return redirect()->route('shipping.index');
     }
@@ -58,7 +61,7 @@ class ShippingController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -96,13 +99,12 @@ class ShippingController extends Controller
             'status'=>'required|in:active,inactive'
         ]);
         $data=$request->all();
-        // return $data;
         $status=$shipping->fill($data)->save();
         if($status){
             request()->session()->flash('success','Shipping successfully updated');
         }
         else{
-            request()->session()->flash('error','Error, Please try again');
+            request()->session()->flash('error',$this->errorMsgTryAgain);
         }
         return redirect()->route('shipping.index');
     }
@@ -122,7 +124,7 @@ class ShippingController extends Controller
                 request()->session()->flash('success','Shipping successfully deleted');
             }
             else{
-                request()->session()->flash('error','Error, Please try again');
+                request()->session()->flash('error',$this->errorMsgTryAgain);
             }
             return redirect()->route('shipping.index');
         }

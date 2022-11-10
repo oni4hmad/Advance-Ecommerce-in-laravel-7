@@ -9,27 +9,28 @@ class NotificationController extends Controller
     public function index(){
         return view('backend.notification.index');
     }
-    public function show(Request $request){
+    public function show(Request $request) {
         $notification=Auth()->user()->notifications()->where('id',$request->id)->first();
-        if($notification){
+        if ($notification) {
             $notification->markAsRead();
             return redirect($notification->data['actionURL']);
         }
+        return null;
     }
-    public function delete($id){
+    public function delete($id) {
         $notification=Notification::find($id);
-        if($notification){
+        if ($notification) {
             $status=$notification->delete();
-            if($status){
+            if ($status) {
                 request()->session()->flash('success','Notification successfully deleted');
                 return back();
             }
-            else{
+            else {
                 request()->session()->flash('error','Error please try again');
                 return back();
             }
         }
-        else{
+        else {
             request()->session()->flash('error','Notification not found');
             return back();
         }

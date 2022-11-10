@@ -19,7 +19,6 @@ class ProductController extends Controller
     public function index()
     {
         $products=Product::getAllProduct();
-        // return $products;
         return view('backend.product.index')->with('products',$products);
     }
 
@@ -32,7 +31,6 @@ class ProductController extends Controller
     {
         $brand=Brand::get();
         $category=Category::where('is_parent',1)->get();
-        // return $category;
         return view('backend.product.create')->with('categories',$category)->with('brands',$brand);
     }
 
@@ -44,7 +42,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $this->validate($request,[
             'title'=>'string|required',
             'summary'=>'string|required',
@@ -77,8 +74,6 @@ class ProductController extends Controller
         else{
             $data['size']='';
         }
-        // return $size;
-        // return $data;
         $status=Product::create($data);
         if($status){
             request()->session()->flash('success','Product Successfully added');
@@ -94,7 +89,7 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -113,7 +108,6 @@ class ProductController extends Controller
         $product=Product::findOrFail($id);
         $category=Category::where('is_parent',1)->get();
         $items=Product::where('id',$id)->get();
-        // return $items;
         return view('backend.product.edit')->with('product',$product)
                     ->with('brands',$brand)
                     ->with('categories',$category)->with('items',$items);
@@ -155,7 +149,6 @@ class ProductController extends Controller
         else{
             $data['size']='';
         }
-        // return $data;
         $status=$product->fill($data)->save();
         if($status){
             request()->session()->flash('success','Product Successfully updated');
@@ -176,7 +169,7 @@ class ProductController extends Controller
     {
         $product=Product::findOrFail($id);
         $status=$product->delete();
-        
+
         if($status){
             request()->session()->flash('success','Product successfully deleted');
         }

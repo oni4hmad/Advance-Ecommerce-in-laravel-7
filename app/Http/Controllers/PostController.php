@@ -19,7 +19,6 @@ class PostController extends Controller
     public function index()
     {
         $posts=Post::getAllPost();
-        // return $posts;
         return view('backend.post.index')->with('posts',$posts);
     }
 
@@ -44,7 +43,6 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $this->validate($request,[
             'title'=>'string|required',
             'quote'=>'string|nullable',
@@ -73,7 +71,6 @@ class PostController extends Controller
         else{
             $data['tags']='';
         }
-        // return $data;
 
         $status=Post::create($data);
         if($status){
@@ -89,7 +86,7 @@ class PostController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -108,7 +105,11 @@ class PostController extends Controller
         $categories=PostCategory::get();
         $tags=PostTag::get();
         $users=User::get();
-        return view('backend.post.edit')->with('categories',$categories)->with('users',$users)->with('tags',$tags)->with('post',$post);
+        return view('backend.post.edit')
+            ->with('categories',$categories)
+            ->with('users',$users)
+            ->with('tags',$tags)
+            ->with('post',$post);
     }
 
     /**
@@ -121,7 +122,6 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         $post=Post::findOrFail($id);
-         // return $request->all();
          $this->validate($request,[
             'title'=>'string|required',
             'quote'=>'string|nullable',
@@ -136,14 +136,12 @@ class PostController extends Controller
 
         $data=$request->all();
         $tags=$request->input('tags');
-        // return $tags;
         if($tags){
             $data['tags']=implode(',',$tags);
         }
         else{
             $data['tags']='';
         }
-        // return $data;
 
         $status=$post->fill($data)->save();
         if($status){
@@ -164,9 +162,9 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post=Post::findOrFail($id);
-       
+
         $status=$post->delete();
-        
+
         if($status){
             request()->session()->flash('success','Post successfully deleted');
         }

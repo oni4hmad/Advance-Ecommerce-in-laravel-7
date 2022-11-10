@@ -35,7 +35,6 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $this->validate($request,[
             'code'=>'string|required',
             'type'=>'required|in:fixed,percent',
@@ -57,7 +56,7 @@ class CouponController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -97,7 +96,7 @@ class CouponController extends Controller
             'status'=>'required|in:active,inactive'
         ]);
         $data=$request->all();
-        
+
         $status=$coupon->fill($data)->save();
         if($status){
             request()->session()->flash('success','Coupon Successfully updated');
@@ -106,7 +105,7 @@ class CouponController extends Controller
             request()->session()->flash('error','Please try again!!');
         }
         return redirect()->route('coupon.index');
-        
+
     }
 
     /**
@@ -135,23 +134,21 @@ class CouponController extends Controller
     }
 
     public function couponStore(Request $request){
-        // return $request->all();
         $coupon=Coupon::where('code',$request->code)->first();
-        // dd($coupon);
-        if(!$coupon){
+        if (!$coupon) {
             request()->session()->flash('error','Invalid coupon code, Please try again');
             return back();
         }
-        if($coupon){
-            $total_price=Cart::where('user_id',auth()->user()->id)->where('order_id',null)->sum('price');
-            // dd($total_price);
+        if ($coupon) {
+            $total_price=Cart::where('user_id', auth()->user()->id)->where('order_id',null)->sum('price');
             session()->put('coupon',[
                 'id'=>$coupon->id,
                 'code'=>$coupon->code,
                 'value'=>$coupon->discount($total_price)
             ]);
-            request()->session()->flash('success','Coupon successfully applied');
+            request()->session()->flash('success', 'Coupon successfully applied');
             return redirect()->back();
         }
+        return null;
     }
 }

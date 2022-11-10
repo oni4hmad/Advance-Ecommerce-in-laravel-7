@@ -35,12 +35,10 @@ class HomeController extends Controller
 
     public function profile(){
         $profile=Auth()->user();
-        // return $profile;
         return view('user.users.profile')->with('profile',$profile);
     }
 
     public function profileUpdate(Request $request,$id){
-        // return $request->all();
         $user=User::findOrFail($id);
         $data=$request->all();
         $status=$user->fill($data)->save();
@@ -85,7 +83,6 @@ class HomeController extends Controller
     public function orderShow($id)
     {
         $order=Order::find($id);
-        // return $order;
         return view('user.order.show')->with('order',$order);
     }
     // Product Review
@@ -97,7 +94,6 @@ class HomeController extends Controller
     public function productReviewEdit($id)
     {
         $review=ProductReview::find($id);
-        // return $review;
         return view('user.review.edit')->with('review',$review);
     }
 
@@ -193,7 +189,6 @@ class HomeController extends Controller
         $comment=PostComment::find($id);
         if($comment){
             $data=$request->all();
-            // return $data;
             $status=$comment->fill($data)->update();
             if($status){
                 request()->session()->flash('success','Comment successfully updated');
@@ -220,11 +215,11 @@ class HomeController extends Controller
             'new_password' => ['required'],
             'new_confirm_password' => ['same:new_password'],
         ]);
-   
+
         User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
-   
+
         return redirect()->route('user')->with('success','Password successfully changed');
     }
 
-    
+
 }

@@ -16,7 +16,6 @@ class CategoryController extends Controller
     public function index()
     {
         $category=Category::getAllCategory();
-        // return $category;
         return view('backend.category.index')->with('categories',$category);
     }
 
@@ -39,11 +38,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
+        $stringNullable = 'string|nullable';
         $this->validate($request,[
             'title'=>'string|required',
-            'summary'=>'string|nullable',
-            'photo'=>'string|nullable',
+            'summary'=>$stringNullable,
+            'photo'=>$stringNullable,
             'status'=>'required|in:active,inactive',
             'is_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
@@ -56,7 +55,6 @@ class CategoryController extends Controller
         }
         $data['slug']=$slug;
         $data['is_parent']=$request->input('is_parent',0);
-        // return $data;   
         $status=Category::create($data);
         if($status){
             request()->session()->flash('success','Category successfully added');
@@ -73,7 +71,7 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -102,19 +100,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request->all();
         $category=Category::findOrFail($id);
+        $stringNullable = 'string|nullable';
         $this->validate($request,[
             'title'=>'string|required',
-            'summary'=>'string|nullable',
-            'photo'=>'string|nullable',
+            'summary'=>$stringNullable,
+            'photo'=>$stringNullable,
             'status'=>'required|in:active,inactive',
             'is_parent'=>'sometimes|in:1',
             'parent_id'=>'nullable|exists:categories,id',
         ]);
         $data= $request->all();
         $data['is_parent']=$request->input('is_parent',0);
-        // return $data;
         $status=$category->fill($data)->save();
         if($status){
             request()->session()->flash('success','Category successfully updated');
@@ -135,9 +132,8 @@ class CategoryController extends Controller
     {
         $category=Category::findOrFail($id);
         $child_cat_id=Category::where('parent_id',$id)->pluck('id');
-        // return $child_cat_id;
         $status=$category->delete();
-        
+
         if($status){
             if(count($child_cat_id)>0){
                 Category::shiftChild($child_cat_id);
@@ -151,10 +147,8 @@ class CategoryController extends Controller
     }
 
     public function getChildByParent(Request $request){
-        // return $request->all();
         $category=Category::findOrFail($request->id);
         $child_cat=Category::getChildByParentID($request->id);
-        // return $child_cat;
         if(count($child_cat)<=0){
             return response()->json(['status'=>false,'msg'=>'','data'=>null]);
         }

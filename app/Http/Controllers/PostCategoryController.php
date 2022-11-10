@@ -36,7 +36,6 @@ class PostCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $this->validate($request,[
             'title'=>'string|required',
             'status'=>'required|in:active,inactive'
@@ -62,7 +61,7 @@ class PostCategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
     {
@@ -91,7 +90,6 @@ class PostCategoryController extends Controller
     public function update(Request $request, $id)
     {
         $postCategory=PostCategory::findOrFail($id);
-         // return $request->all();
          $this->validate($request,[
             'title'=>'string|required',
             'status'=>'required|in:active,inactive'
@@ -116,9 +114,9 @@ class PostCategoryController extends Controller
     public function destroy($id)
     {
         $postCategory=PostCategory::findOrFail($id);
-       
+
         $status=$postCategory->delete();
-        
+
         if($status){
             request()->session()->flash('success','Post Category successfully deleted');
         }

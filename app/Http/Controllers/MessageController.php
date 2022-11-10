@@ -25,7 +25,7 @@ class MessageController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
@@ -47,10 +47,8 @@ class MessageController extends Controller
             'subject'=>'string|required',
             'phone'=>'numeric|required'
         ]);
-        // return $request->all();
 
         $message=Message::create($request->all());
-            // return $message;
         $data=array();
         $data['url']=route('message.show',$message->id);
         $data['date']=$message->created_at->format('F d, Y h:i A');
@@ -60,7 +58,6 @@ class MessageController extends Controller
         $data['message']=$message->message;
         $data['subject']=$message->subject;
         $data['photo']=Auth()->user()->photo;
-        // return $data;    
         event(new MessageSent($data));
         exit();
     }
@@ -88,7 +85,7 @@ class MessageController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function edit($id)
     {
@@ -100,7 +97,7 @@ class MessageController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function update(Request $request, $id)
     {
